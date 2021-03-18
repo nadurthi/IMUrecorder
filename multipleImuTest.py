@@ -200,7 +200,7 @@ print("X2 : ", min(d),max(d),np.mean(d),sum(d>1.5*np.mean(d)))
 
 ssh = SSHClient()
 ssh.load_system_host_keys()
-ssh.connect(address,username='nagnanmus')
+ssh.connect(address[0],username='nagnanmus')
 
 with SCPClient(ssh.get_transport()) as scp:
     scp.put("IMUdata.npz")
