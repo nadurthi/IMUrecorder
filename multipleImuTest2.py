@@ -14,10 +14,6 @@ import errno
 import socket
 import sys
 
-from paramiko import SSHClient
-from scp import SCPClient
-
-
 
 multicast_group = '224.3.29.71'
 server_address = ('', 10000)
@@ -98,9 +94,7 @@ while True:
     print('sending acknowledgement to', address)
     sock.sendto(str.encode('IMUs started'), address)
 
-    print('*',data.decode(),'*')
-    print('start' in data.decode())
-    if 'start' in data.decode():
+    if data.decode()=='start':
         break
 
 sock.setblocking(0)
@@ -181,7 +175,7 @@ while True:
 
     try:
         data, address = sock.recvfrom(1024)
-        if 'stop' in data.decode():
+        if data.decode()=='stop':
             break
     except:
         pass
@@ -196,11 +190,3 @@ print("X1 : ", min(d),max(d),np.mean(d),sum(d>1.5*np.mean(d)))
 
 d= np.diff(X2[:,0])
 print("X2 : ", min(d),max(d),np.mean(d),sum(d>1.5*np.mean(d)))
-
-
-ssh = SSHClient()
-ssh.load_system_host_keys()
-ssh.connect(address,username='nagnanmus')
-
-with SCPClient(ssh.get_transport()) as scp:
-    scp.put("IMUdata.npz")
